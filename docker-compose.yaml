@@ -1,0 +1,9 @@
+services:
+  app:
+    build:
+      context: .
+    command: sleep infinity
+    volumes:
+      - .:/go/src/metrics-exporter
+  redis:
+    image: redis
