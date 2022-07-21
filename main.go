@@ -6,6 +6,7 @@ import (
 	"github.com/gomodule/redigo/redis"
 	"log"
 	"net/http"
+	"sort"
 	"strings"
 )
 
@@ -19,6 +20,7 @@ func metrics(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		panic(err)
 	}
+	sort.Strings(keys)
 	for _, key := range keys {
 		value, err := redisClient.Do("GET", key)
 		if err != nil {
@@ -39,10 +41,12 @@ func metrics(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	var redisAddress string
+	var redisDb int
 	flag.StringVar(&prefix, "p", "metrics", "Metrics key prefix")
 	flag.StringVar(&redisAddress, "c", "redis:6379", "Redis connection string")
+	flag.IntVar(&redisDb, "d", 0, "Redis db to connect")
 	flag.Parse()
-	pool = newPool(redisAddress)
+	pool = newPool(redisAddress, redisDb)
 	http.HandleFunc("/metrics", metrics)
 	err := http.ListenAndServe(":8080", nil)
 	if err != nil {
@@ -50,10 +54,10 @@ func main() {
 	}
 }
 
-func newPool(redisAddress string) *redis.Pool {
+func newPool(redisAddress string, redisDb int) *redis.Pool {
 	return &redis.Pool{
 		Dial: func() (redis.Conn, error) {
-			c, err := redis.Dial("tcp", redisAddress)
+			c, err := redis.Dial("tcp", redisAddress, redis.DialDatabase(redisDb))
 			if err != nil {
 				panic(err.Error())
 			}

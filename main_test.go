@@ -8,7 +8,7 @@ import (
 )
 
 func TestConvert(t *testing.T) {
-	pool = newPool("redis:6379")
+	pool = newPool("redis:6379", 0)
 	redisClient := pool.Get()
 	defer redisClient.Close()
 	_, err := redisClient.Do("SET", "testmetrics:m1:l1=v1,l2=v2", 1)
@@ -29,7 +29,7 @@ func TestConvert(t *testing.T) {
 	if err != nil {
 		t.Errorf("expected error to be nil got %v", err)
 	}
-	expected := "m2{l3=\"v3\",l4=\"v4\"} 2\nm1{l1=\"v1\",l2=\"v2\"} 1\n"
+	expected := "m1{l1=\"v1\",l2=\"v2\"} 1\nm2{l3=\"v3\",l4=\"v4\"} 2\n"
 	if string(data) != expected {
 		t.Fatalf("%s != %s", data, expected)
 	}

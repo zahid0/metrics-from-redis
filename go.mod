@@ -1,4 +1,4 @@
-module metrics-exporter
+module metrics-from-redis
 
 go 1.17
 
