@@ -26,9 +26,10 @@ func metrics(w http.ResponseWriter, r *http.Request) {
 		if err != nil {
 			panic(err)
 		}
-		v := strings.SplitN(key, ":", 3)
-		fmt.Fprintf(w, "%s{", v[1])
-		for i, label := range strings.Split(v[2], ",") {
+		metric := strings.TrimPrefix(key, prefix+":")
+		v := strings.SplitN(metric, ":", 2)
+		fmt.Fprintf(w, "%s{", v[0])
+		for i, label := range strings.Split(v[1], ",") {
 			if i > 0 {
 				fmt.Fprintf(w, ",")
 			}
