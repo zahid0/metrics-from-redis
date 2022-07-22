@@ -1,11 +1,11 @@
 services:
   app:
-    image: zahid0/metrics-from-redis:latest
-    # image: golang
-    # command: sleep infinity
-    # volumes:
-    #   - .:/go/src/metrics-from-redis
-    # working_dir: /go/src/metrics-from-redis
+    # image: zahid0/metrics-from-redis:latest
+    image: golang
+    command: sleep infinity
+    volumes:
+      - .:/go/src/metrics-from-redis
+    working_dir: /go/src/metrics-from-redis
     ports:
       - 8080:8080
   redis:

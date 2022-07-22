@@ -14,6 +14,7 @@ var prefix string
 var pool *redis.Pool
 
 func metrics(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "text/plain")
 	redisClient := pool.Get()
 	defer redisClient.Close()
 	keys, err := redis.Strings(redisClient.Do("KEYS", prefix+":*"))
